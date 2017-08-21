@@ -11,18 +11,18 @@ import java.util.List;
 
 public class TrueWalletDataRepository implements TrueWalletDataSource {
 
-    TrueWalletDataRepository instance = null;
+    private static TrueWalletDataRepository instance = null;
 
-    TrueWalletDataSource mTrueWalletLocalDataSource;
+    private final TrueWalletDataSource mTrueWalletLocalDataSource;
 
-    TrueWalletDataSource mTrueWalletRemoteDataSource;
+    private final TrueWalletDataSource mTrueWalletRemoteDataSource;
 
     private TrueWalletDataRepository(TrueWalletDataSource localDataSource, TrueWalletDataSource remoteDataSource){
         mTrueWalletLocalDataSource = checkNotNull(localDataSource);
         mTrueWalletRemoteDataSource = checkNotNull(remoteDataSource);
     }
 
-    public TrueWalletDataRepository getInstance(TrueWalletDataSource localDataSource,TrueWalletDataSource remoteDataSource) {
+    public static TrueWalletDataRepository getInstance(TrueWalletDataSource localDataSource,TrueWalletDataSource remoteDataSource) {
         if(instance == null){
             instance = new TrueWalletDataRepository(localDataSource,remoteDataSource);
         }

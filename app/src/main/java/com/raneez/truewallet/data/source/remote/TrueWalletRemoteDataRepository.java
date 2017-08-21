@@ -11,13 +11,13 @@ import java.util.List;
 
 public class TrueWalletRemoteDataRepository implements TrueWalletDataSource {
 
-    TrueWalletDataSource instance = null;
+    private static TrueWalletDataSource instance = null;
 
     private TrueWalletRemoteDataRepository(){
 
     }
 
-    public TrueWalletDataSource getInstance() {
+    public static TrueWalletDataSource getInstance() {
         if(instance == null){
             instance = new TrueWalletRemoteDataRepository();
         }

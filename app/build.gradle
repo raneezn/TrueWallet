@@ -12,7 +12,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        debug{
+        debug {
             minifyEnabled false
         }
         release {
@@ -21,12 +21,12 @@ android {
         }
 
     }
-    productFlavors{
-        mock{
+    productFlavors {
+        mock {
             //applicationIdSuffix = ".mock"
             applicationId = "com.raneez.truewallet.mock"
         }
-        prod{
+        prod {
         }
     }
     android.variantFilter { variant ->
@@ -44,7 +44,7 @@ dependencies {
     })
 //    compile 'com.android.support:appcompat-v7:25.3.1'
 //    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    
 
 // App's dependencies, including test
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
@@ -55,5 +55,7 @@ dependencies {
     compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
     compile "com.google.guava:guava:$rootProject.guavaVersion"
 
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:support-v4:25.3.1'
     testCompile 'junit:junit:4.12'
 }
