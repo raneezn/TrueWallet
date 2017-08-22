@@ -1,6 +1,10 @@
 package com.raneez.truewallet.main;
 
+import com.raneez.truewallet.data.Expense;
 import com.raneez.truewallet.data.source.TrueWalletDataRepository;
+import com.raneez.truewallet.data.source.TrueWalletDataSource;
+
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,6 +27,21 @@ public class ExpenseListPresenter implements ExpenseContract.Presenter {
     @Override
     public void start() {
 
+    }
+
+    @Override
+    public void fetchAllExpenses() {
+        trueWalletDataRepository.getAllExpenses(new TrueWalletDataSource.Callback<List<Expense>>() {
+            @Override
+            public void onSuccess(List<Expense> data) {
+                expenseListView.showAllExpenses(data);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
     }
 
     @Override

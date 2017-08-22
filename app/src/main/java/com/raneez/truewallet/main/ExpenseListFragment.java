@@ -7,13 +7,18 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.raneez.truewallet.R;
 import com.raneez.truewallet.addexpense.AddExpenseActivity;
+import com.raneez.truewallet.data.Expense;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +29,7 @@ public class ExpenseListFragment extends Fragment implements ExpenseContract.Vie
 
     ExpenseContract.Presenter mPresenter;
     RecyclerView expenseRecyclerView;
+    ExpenseListRVAdapter adapter;
 
     public ExpenseListFragment() {
         // Required empty public constructor
@@ -46,6 +52,11 @@ public class ExpenseListFragment extends Fragment implements ExpenseContract.Vie
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        adapter = new ExpenseListRVAdapter(null);
+        expenseRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        expenseRecyclerView.setAdapter(adapter);
+
+        mPresenter.fetchAllExpenses();
     }
 
 
@@ -66,6 +77,8 @@ public class ExpenseListFragment extends Fragment implements ExpenseContract.Vie
             }
         });
 
+        expenseRecyclerView = (RecyclerView) root.findViewById(R.id.expenseListRecyclerView);
+
         return root;
 
     }
@@ -81,8 +94,65 @@ public class ExpenseListFragment extends Fragment implements ExpenseContract.Vie
     }
 
     @Override
+    public void showAllExpenses(List<Expense> data) {
+        if(adapter != null) {
+            adapter.updateData(data);
+        }
+    }
+
+    @Override
     public void showAddExpense() {
         Intent intent = new Intent(getActivity(), AddExpenseActivity.class);
         startActivityForResult(intent,100);
+    }
+
+    private class ExpenseListRVAdapter extends RecyclerView.Adapter<ExpenseListRVAdapter.ExpenseViewHolder> {
+
+        List<Expense> dataset;
+        public ExpenseListRVAdapter(List<Expense> data) {
+            dataset = data;
+        }
+
+        public void updateData(List<Expense> newData){
+            dataset = newData;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public ExpenseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_list_rv_item,parent,false);
+            return new ExpenseViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ExpenseViewHolder holder, int position) {
+            holder.bindData(dataset.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            if(dataset != null)
+                return dataset.size();
+            else
+                return 0;
+        }
+
+
+        class ExpenseViewHolder extends RecyclerView.ViewHolder{
+
+            TextView expenseDesc;
+            TextView expenseAmount;
+
+            public ExpenseViewHolder(View itemView) {
+                super(itemView);
+                expenseDesc = (TextView)itemView.findViewById(R.id.expense_desc);
+                expenseAmount = (TextView)itemView.findViewById(R.id.expense_amount);
+            }
+
+            public void bindData(Expense expense){
+                expenseDesc.setText(expense.getDescription());
+                expenseAmount.setText(expense.getAmount() + "");
+            }
+        }
     }
 }
