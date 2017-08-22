@@ -109,6 +109,7 @@ public class ExpenseListFragment extends Fragment implements ExpenseContract.Vie
     private class ExpenseListRVAdapter extends RecyclerView.Adapter<ExpenseListRVAdapter.ExpenseViewHolder> {
 
         List<Expense> dataset;
+
         public ExpenseListRVAdapter(List<Expense> data) {
             dataset = data;
         }
