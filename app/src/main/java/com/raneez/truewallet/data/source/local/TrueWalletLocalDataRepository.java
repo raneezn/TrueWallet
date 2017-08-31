@@ -1,5 +1,7 @@
 package com.raneez.truewallet.data.source.local;
 
+import android.content.Context;
+
 import com.raneez.truewallet.data.Expense;
 import com.raneez.truewallet.data.source.TrueWalletDataSource;
 
@@ -12,21 +14,23 @@ import java.util.List;
 public class TrueWalletLocalDataRepository implements TrueWalletDataSource {
 
     private static TrueWalletDataSource instance = null;
+    private TrueWalletDAO trueWalletDAO = null;
 
-    private TrueWalletLocalDataRepository(){
-
+    private TrueWalletLocalDataRepository(Context context){
+        trueWalletDAO = TrueWalletDAO.getInstance(context);
     }
 
-    public static TrueWalletDataSource getInstance() {
+    public static TrueWalletDataSource getInstance(Context context) {
         if(instance == null){
-            instance = new TrueWalletLocalDataRepository();
+            instance = new TrueWalletLocalDataRepository(context);
         }
         return instance;
     }
 
     @Override
     public void getAllExpenses(Callback<List<Expense>> callback) {
-
+        List<Expense> result = trueWalletDAO.getAllExpenses();
+        callback.onSuccess(result);
     }
 
     @Override
@@ -35,8 +39,9 @@ public class TrueWalletLocalDataRepository implements TrueWalletDataSource {
     }
 
     @Override
-    public void saveExpense(Expense expense) {
-
+    public void saveExpense(Expense expense,Callback callback) {
+        trueWalletDAO.saveExpense(expense);
+        callback.onSuccess(null);
     }
 
     @Override

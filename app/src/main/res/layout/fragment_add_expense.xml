@@ -19,7 +19,7 @@
         android:layout_marginTop="50dp" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/edit_expense_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
@@ -44,7 +44,7 @@
         app:layout_constraintTop_toBottomOf="@+id/expense_desc" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/edit_expense_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -69,5 +69,5 @@
         android:text="Save Expense"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_expense_amount" />
 </android.support.constraint.ConstraintLayout>

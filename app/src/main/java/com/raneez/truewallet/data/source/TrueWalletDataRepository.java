@@ -40,8 +40,8 @@ public class TrueWalletDataRepository implements TrueWalletDataSource {
     }
 
     @Override
-    public void saveExpense(Expense expense) {
-
+    public void saveExpense(Expense expense, final Callback callback) {
+        mTrueWalletLocalDataSource.saveExpense(expense, callback);
     }
 
     @Override

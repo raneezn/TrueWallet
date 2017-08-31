@@ -35,7 +35,7 @@ public class TrueWalletRemoteDataRepository implements TrueWalletDataSource {
     }
 
     @Override
-    public void saveExpense(Expense expense) {
+    public void saveExpense(Expense expense,Callback callback) {
 
     }
 

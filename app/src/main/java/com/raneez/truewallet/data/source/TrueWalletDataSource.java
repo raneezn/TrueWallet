@@ -17,7 +17,7 @@ public interface TrueWalletDataSource {
 
     void getAllExpenses(Callback<List<Expense>> callback);
     void getExpenseDetails(String id,Callback<Expense> callback);
-    void saveExpense(Expense expense);
+    void saveExpense(Expense expense,Callback callback);
     void removeExpense(Expense expense);
     void updateExpense(Expense expense);
 }

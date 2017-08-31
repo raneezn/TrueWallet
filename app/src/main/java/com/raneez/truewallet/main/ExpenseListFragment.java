@@ -50,6 +50,12 @@ public class ExpenseListFragment extends Fragment implements ExpenseContract.Vie
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.fetchAllExpenses();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         adapter = new ExpenseListRVAdapter(null);

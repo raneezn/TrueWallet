@@ -16,7 +16,7 @@ public class Injection {
 
     public static TrueWalletDataRepository provideTrueWalletRepository(Context context){
         checkNotNull(context);
-        return TrueWalletDataRepository.getInstance(TrueWalletLocalDataRepository.getInstance(),
+        return TrueWalletDataRepository.getInstance(TrueWalletLocalDataRepository.getInstance(context),
                 TrueWalletRemoteDataRepository.getInstance());
     }
 }

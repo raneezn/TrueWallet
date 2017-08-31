@@ -3,13 +3,17 @@ package com.raneez.truewallet.addexpense;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.raneez.truewallet.Injection;
 import com.raneez.truewallet.R;
 
 public class AddExpenseActivity extends AppCompatActivity {
+
+    AddExpenseContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,15 @@ public class AddExpenseActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
+
+
+        AddExpenseActivityFragment addExpenseActivityFragment = AddExpenseActivityFragment.newInstance();
+        presenter = new AddExpensePresenter(Injection.provideTrueWalletRepository(getApplicationContext()),
+                addExpenseActivityFragment);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.AddExpensefragmentContainer,addExpenseActivityFragment).commit();
+
+
     }
 
 }
