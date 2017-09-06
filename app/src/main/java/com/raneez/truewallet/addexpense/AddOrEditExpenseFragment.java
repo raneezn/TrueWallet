@@ -18,19 +18,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class AddExpenseActivityFragment extends Fragment implements AddExpenseContract.View,View.OnClickListener{
+public class AddOrEditExpenseFragment extends Fragment implements AddOrEditExpenseContract.View,View.OnClickListener{
+    public static final String EXPENSE_ID = "expense_id";
 
-    AddExpenseContract.Presenter mPresenter;
+    AddOrEditExpenseContract.Presenter mPresenter;
 
     EditText editDesc;
     EditText editAmount;
     Button btnSaveExpense;
 
-    public AddExpenseActivityFragment() {
+    public AddOrEditExpenseFragment() {
     }
 
-    public static AddExpenseActivityFragment newInstance() {
-        AddExpenseActivityFragment fragment = new AddExpenseActivityFragment();
+    public static AddOrEditExpenseFragment newInstance() {
+        AddOrEditExpenseFragment fragment = new AddOrEditExpenseFragment();
         return fragment;
     }
 
@@ -54,7 +55,15 @@ public class AddExpenseActivityFragment extends Fragment implements AddExpenseCo
     }
 
     @Override
-    public void setPresenter(AddExpenseContract.Presenter presenter) {
+    public void onResume() {
+        super.onResume();
+        if(mPresenter != null){
+            mPresenter.start();
+        }
+    }
+
+    @Override
+    public void setPresenter(AddOrEditExpenseContract.Presenter presenter) {
         checkNotNull(presenter);
         mPresenter = presenter;
 
@@ -71,20 +80,43 @@ public class AddExpenseActivityFragment extends Fragment implements AddExpenseCo
     }
 
     @Override
-    public void showAddExpenseValidationError() {
-        Toast.makeText(getActivity(),"Error",Toast.LENGTH_SHORT).show();
+    public void onUpdateExpenseCompleted() {
+        getActivity().finish();
+    }
+
+    @Override
+    public void showAddExpenseError(String message) {
+        Toast.makeText(getActivity(),"Add Error",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showUpdateExpenseError(String message) {
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showCurrentExpenseDetails(Expense expense) {
+        if(expense != null){
+            editDesc.setText(expense.getDescription());
+            editAmount.setText(expense.getAmount()+"");
+        }
+    }
+
+    @Override
+    public void setEditViews() {
+        btnSaveExpense.setText("Update Expense");
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.save_expense:
-                saveNewExpense();
+                saveExpense();
                 break;
         }
     }
 
-    private void saveNewExpense() {
+    private void saveExpense() {
         String desription = editDesc.getText().toString();
         double amount = Double.parseDouble(editAmount.getText().toString());
 
@@ -92,6 +124,6 @@ public class AddExpenseActivityFragment extends Fragment implements AddExpenseCo
         expense.setDescription(desription);
         expense.setAmount(amount);
 
-        mPresenter.addNewExpense(expense);
+        mPresenter.saveExpense(expense);
     }
 }

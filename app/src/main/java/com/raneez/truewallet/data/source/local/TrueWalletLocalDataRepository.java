@@ -34,8 +34,13 @@ public class TrueWalletLocalDataRepository implements TrueWalletDataSource {
     }
 
     @Override
-    public void getExpenseDetails(String id, Callback<Expense> callback) {
-
+    public void getExpenseDetails(int id, Callback<Expense> callback) {
+        Expense expense = trueWalletDAO.getExpenseDetails(id);
+        if(expense != null) {
+            callback.onSuccess(expense);
+        }else{
+            callback.onFailure(new Throwable("No expense data"));
+        }
     }
 
     @Override
@@ -45,12 +50,12 @@ public class TrueWalletLocalDataRepository implements TrueWalletDataSource {
     }
 
     @Override
-    public void removeExpense(Expense expense) {
+    public void removeExpense(Expense expense,Callback callback) {
 
     }
 
     @Override
-    public void updateExpense(Expense expense) {
-
+    public void updateExpense(Expense expense,Callback callback) {
+        trueWalletDAO.updateExpense(expense.getId(),expense,callback);
     }
 }

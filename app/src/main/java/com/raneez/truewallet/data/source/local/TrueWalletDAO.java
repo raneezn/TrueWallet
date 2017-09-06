@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.raneez.truewallet.data.Expense;
+import com.raneez.truewallet.data.source.TrueWalletDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class TrueWalletDAO implements DatabaseContract{
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] projection = {
-                ExpenseEntry.COLUMN_NAME_ID,
+                ExpenseEntry._ID,
                 ExpenseEntry.COLUMN_NAME_DESCRIPTION,
                 ExpenseEntry.COLUMN_NAME_AMOUNT
         };
@@ -61,10 +62,10 @@ public class TrueWalletDAO implements DatabaseContract{
         Cursor c = db.query(ExpenseEntry.TABLE_NAME,projection,null,null,null,null,null);
         if(c != null && c.getCount() > 0){
             while (c.moveToNext()){
-                String id = c.getString(c.getColumnIndexOrThrow(ExpenseEntry.COLUMN_NAME_ID));
+                int id = c.getInt(c.getColumnIndexOrThrow(ExpenseEntry._ID));
                 String desc = c.getString(c.getColumnIndexOrThrow(ExpenseEntry.COLUMN_NAME_DESCRIPTION));
                 double amount = c.getDouble(c.getColumnIndexOrThrow(ExpenseEntry.COLUMN_NAME_AMOUNT));
-
+                System.out.println(" ID : "+id);
                 Expense expense = new Expense();
                 expense.setId(id);
                 expense.setDescription(desc);
@@ -83,12 +84,65 @@ public class TrueWalletDAO implements DatabaseContract{
     }
 
     @Override
-    public void updateExpense(String id, Expense data) {
+    public Expense getExpenseDetails(int expenseId) {
+        Expense expense = null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String[] projection = {
+                ExpenseEntry._ID,
+                ExpenseEntry.COLUMN_NAME_DESCRIPTION,
+                ExpenseEntry.COLUMN_NAME_AMOUNT
+        };
+        String selection = ExpenseEntry._ID + " = ?";
+        String selectionArgs[] = new String[]{expenseId + ""};
 
+        Cursor c = db.query(ExpenseEntry.TABLE_NAME,projection,selection,selectionArgs,null,null,null);
+        if(c != null && c.getCount() > 0){
+            while (c.moveToNext()){
+                int id = c.getInt(c.getColumnIndexOrThrow(ExpenseEntry._ID));
+                String desc = c.getString(c.getColumnIndexOrThrow(ExpenseEntry.COLUMN_NAME_DESCRIPTION));
+                double amount = c.getDouble(c.getColumnIndexOrThrow(ExpenseEntry.COLUMN_NAME_AMOUNT));
+                System.out.println(" ID : "+id);
+
+                expense = new Expense();
+                expense.setId(id);
+                expense.setDescription(desc);
+                expense.setAmount(amount);
+
+            }
+        }
+
+        if(c != null){
+            c.close();
+        }
+        db.close();
+
+        return expense;
     }
 
     @Override
-    public void deleteExpense(String id) {
+    public void updateExpense(int id, Expense updatedExpense, TrueWalletDataSource.Callback callback) {
+        checkNotNull(updatedExpense);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String where = ExpenseEntry._ID + "= ?";
+        String[] whereArgs = new String[]{id+""};
+
+        ContentValues values = new ContentValues();
+        values.put(ExpenseEntry.COLUMN_NAME_DESCRIPTION,updatedExpense.getDescription());
+        values.put(ExpenseEntry.COLUMN_NAME_AMOUNT,updatedExpense.getAmount());
+
+        int rowsUpdated = db.update(ExpenseEntry.TABLE_NAME,values,where,whereArgs);
+        db.close();
+
+        if(rowsUpdated > 0){
+            callback.onSuccess(rowsUpdated);
+        }else{
+            callback.onFailure(new Throwable("update failed"));
+        }
+    }
+
+    @Override
+    public void deleteExpense(int id, TrueWalletDataSource.Callback callback) {
 
     }
 }

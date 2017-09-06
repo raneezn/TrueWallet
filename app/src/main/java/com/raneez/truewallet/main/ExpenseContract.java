@@ -15,11 +15,11 @@ public interface ExpenseContract {
     interface View extends BaseView<Presenter>{
         void showLoadingIndicator(boolean show);
         void showAllExpenses(List<Expense> data);
-        void showAddExpense();
+        void showAddOrEditExpense(int id);
     }
 
     interface Presenter extends BasePresenter{
         void fetchAllExpenses();
-        void addNewExpense();
+        void AddNewExpense();
     }
 }

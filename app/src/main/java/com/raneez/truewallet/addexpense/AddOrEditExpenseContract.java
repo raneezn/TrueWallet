@@ -9,14 +9,19 @@ import com.raneez.truewallet.data.source.TrueWalletDataSource;
  * Created by raneezahmed on 26/08/17.
  */
 
-public interface AddExpenseContract {
+public interface AddOrEditExpenseContract {
     interface View extends BaseView<Presenter>{
         void showLoadingIndicator(boolean show);
         void onAddNewExpenseCompleted();
-        void showAddExpenseValidationError();
+        void onUpdateExpenseCompleted();
+        void showAddExpenseError(String message);
+        void showUpdateExpenseError(String message);
+        void showCurrentExpenseDetails(Expense expense);
+        void setEditViews();
     }
 
     interface Presenter extends BasePresenter{
-        void addNewExpense(Expense newExpense);
+        void saveExpense(Expense newExpense);
+        void getExpenseDetails(int id);
     }
 }

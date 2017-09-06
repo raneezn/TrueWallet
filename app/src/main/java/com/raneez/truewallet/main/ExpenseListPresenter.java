@@ -45,7 +45,7 @@ public class ExpenseListPresenter implements ExpenseContract.Presenter {
     }
 
     @Override
-    public void addNewExpense() {
-        expenseListView.showAddExpense();
+    public void AddNewExpense() {
+        expenseListView.showAddOrEditExpense(-1);
     }
 }

@@ -1,19 +1,16 @@
 package com.raneez.truewallet.addexpense;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.raneez.truewallet.Injection;
 import com.raneez.truewallet.R;
 
-public class AddExpenseActivity extends AppCompatActivity {
+public class AddOrEditExpenseActivity extends AppCompatActivity {
 
-    AddExpenseContract.Presenter presenter;
+    AddOrEditExpenseContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +28,14 @@ public class AddExpenseActivity extends AppCompatActivity {
             }
         });*/
 
+        int expenseId = getIntent().getIntExtra(AddOrEditExpenseFragment.EXPENSE_ID,-1);
 
-        AddExpenseActivityFragment addExpenseActivityFragment = AddExpenseActivityFragment.newInstance();
-        presenter = new AddExpensePresenter(Injection.provideTrueWalletRepository(getApplicationContext()),
-                addExpenseActivityFragment);
+
+        AddOrEditExpenseFragment addOrEditExpenseFragment = AddOrEditExpenseFragment.newInstance();
+        presenter = new AddOrEditExpensePresenter(Injection.provideTrueWalletRepository(getApplicationContext()),
+                addOrEditExpenseFragment,expenseId);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.AddExpensefragmentContainer,addExpenseActivityFragment).commit();
+        fragmentTransaction.replace(R.id.AddExpensefragmentContainer,addOrEditExpenseFragment).commit();
 
 
     }

@@ -13,10 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.raneez.truewallet.R;
-import com.raneez.truewallet.addexpense.AddExpenseActivity;
+import com.raneez.truewallet.addexpense.AddOrEditExpenseActivity;
+import com.raneez.truewallet.addexpense.AddOrEditExpenseFragment;
 import com.raneez.truewallet.data.Expense;
+import com.raneez.truewallet.utils.RVItemClickListener;
 
 import java.util.List;
 
@@ -58,7 +61,15 @@ public class ExpenseListFragment extends Fragment implements ExpenseContract.Vie
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        adapter = new ExpenseListRVAdapter(null);
+        adapter = new ExpenseListRVAdapter(null, new RVItemClickListener() {
+            @Override
+            public void onItemClick(Object item) {
+                Expense expense = (Expense)item;
+                //Toast.makeText(getActivity(),"click on item : "+expense.getId(),Toast.LENGTH_SHORT).show();
+                showAddOrEditExpense(expense.getId());
+            }
+        });
+        //expenseRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
         expenseRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         expenseRecyclerView.setAdapter(adapter);
 
@@ -76,9 +87,9 @@ public class ExpenseListFragment extends Fragment implements ExpenseContract.Vie
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                mPresenter.addNewExpense();
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+                mPresenter.AddNewExpense();
 
             }
         });
@@ -104,20 +115,26 @@ public class ExpenseListFragment extends Fragment implements ExpenseContract.Vie
         if(adapter != null) {
             adapter.updateData(data);
         }
+
     }
 
     @Override
-    public void showAddExpense() {
-        Intent intent = new Intent(getActivity(), AddExpenseActivity.class);
+    public void showAddOrEditExpense(int id) {
+        Intent intent = new Intent(getActivity(), AddOrEditExpenseActivity.class);
+        if(id != -1){
+            intent.putExtra(AddOrEditExpenseFragment.EXPENSE_ID,id);
+        }
         startActivityForResult(intent,100);
     }
 
     private class ExpenseListRVAdapter extends RecyclerView.Adapter<ExpenseListRVAdapter.ExpenseViewHolder> {
 
         List<Expense> dataset;
+        RVItemClickListener itemClickListener;
 
-        public ExpenseListRVAdapter(List<Expense> data) {
+        public ExpenseListRVAdapter(List<Expense> data,RVItemClickListener listener) {
             dataset = data;
+            itemClickListener = listener;
         }
 
         public void updateData(List<Expense> newData){
@@ -128,7 +145,7 @@ public class ExpenseListFragment extends Fragment implements ExpenseContract.Vie
         @Override
         public ExpenseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_list_rv_item,parent,false);
-            return new ExpenseViewHolder(view);
+            return new ExpenseViewHolder(view,itemClickListener);
         }
 
         @Override
@@ -149,16 +166,26 @@ public class ExpenseListFragment extends Fragment implements ExpenseContract.Vie
 
             TextView expenseDesc;
             TextView expenseAmount;
+            RVItemClickListener itemClickListener;
 
-            public ExpenseViewHolder(View itemView) {
+            public ExpenseViewHolder(View itemView, RVItemClickListener listener) {
                 super(itemView);
                 expenseDesc = (TextView)itemView.findViewById(R.id.expense_desc);
                 expenseAmount = (TextView)itemView.findViewById(R.id.expense_amount);
+                itemClickListener = listener;
             }
 
-            public void bindData(Expense expense){
+            public void bindData(final Expense expense){
                 expenseDesc.setText(expense.getDescription());
                 expenseAmount.setText(expense.getAmount() + "");
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(itemClickListener != null){
+                            itemClickListener.onItemClick(expense);
+                        }
+                    }
+                });
             }
         }
     }

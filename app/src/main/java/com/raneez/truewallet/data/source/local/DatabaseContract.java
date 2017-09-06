@@ -3,6 +3,7 @@ package com.raneez.truewallet.data.source.local;
 import android.provider.BaseColumns;
 
 import com.raneez.truewallet.data.Expense;
+import com.raneez.truewallet.data.source.TrueWalletDataSource;
 
 import java.util.List;
 
@@ -13,8 +14,9 @@ import java.util.List;
 public interface DatabaseContract {
     void saveExpense(Expense expense);
     List<Expense> getAllExpenses();
-    void updateExpense(String id,Expense data);
-    void deleteExpense(String id);
+    Expense getExpenseDetails(int id);
+    void updateExpense(int id, Expense data, TrueWalletDataSource.Callback callback);
+    void deleteExpense(int id, TrueWalletDataSource.Callback callback);
 
     public class ExpenseEntry implements BaseColumns {
         public static final String TABLE_NAME = "TrueWalletExpense";

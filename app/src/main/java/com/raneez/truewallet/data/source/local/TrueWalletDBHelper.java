@@ -23,7 +23,7 @@ public class TrueWalletDBHelper extends SQLiteOpenHelper {
     private static final String COMMA_SEP = ",";
 
     public static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + TABLE_NAME +
-            " (" + COLUMN_NAME_ID + TEXT_TYPE + " PRIMARY KEY" + COMMA_SEP +
+            " (" + DatabaseContract.ExpenseEntry._ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT NOT NULL" + COMMA_SEP +
             COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
             COLUMN_NAME_AMOUNT + INTEGER_TYPE + ")";
 

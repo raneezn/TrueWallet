@@ -35,8 +35,8 @@ public class TrueWalletDataRepository implements TrueWalletDataSource {
     }
 
     @Override
-    public void getExpenseDetails(String id, Callback<Expense> callback) {
-
+    public void getExpenseDetails(int id, Callback<Expense> callback) {
+        mTrueWalletLocalDataSource.getExpenseDetails(id,callback);
     }
 
     @Override
@@ -45,12 +45,12 @@ public class TrueWalletDataRepository implements TrueWalletDataSource {
     }
 
     @Override
-    public void removeExpense(Expense expense) {
+    public void removeExpense(Expense expense,Callback callback) {
 
     }
 
     @Override
-    public void updateExpense(Expense expense) {
-
+    public void updateExpense(Expense expense,Callback callback) {
+        mTrueWalletLocalDataSource.updateExpense(expense,callback);
     }
 }
